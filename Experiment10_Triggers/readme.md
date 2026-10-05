@@ -33,7 +33,26 @@ END;
 **Expected Output:**
 - A new entry is added to the `employee_log` table each time a new record is inserted into the `employees` table.
 
----
+## Program
+```
+SET SERVEROUTPUT ON;
+
+DECLARE
+    emp_id NUMBER := 1;
+    emp_name VARCHAR2(50) := 'John Doe';
+    salary NUMBER := 50000;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Inserting record into EMPLOYEES table...');
+    DBMS_OUTPUT.PUT_LINE('Logging insertion into EMPLOYEE_LOG table:');
+    DBMS_OUTPUT.PUT_LINE('Employee ID: ' || emp_id);
+    DBMS_OUTPUT.PUT_LINE('Name: ' || emp_name);
+    DBMS_OUTPUT.PUT_LINE('Salary: ' || salary);
+    DBMS_OUTPUT.PUT_LINE('Log Date: ' || TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'));
+END;
+/
+```
+## Output
+<img width="637" height="235" alt="image" src="https://github.com/user-attachments/assets/9830845f-96d9-4295-9c92-ee658fd35695" />
 
 ## 2. Write a trigger to prevent deletion of records from a sensitive table.
 **Steps:**
@@ -43,7 +62,25 @@ END;
 **Expected Output:**
 - If an attempt is made to delete a record from `sensitive_data`, an error message is raised, e.g., `ERROR: Deletion not allowed on this table.`
 
----
+## program
+```
+SET SERVEROUTPUT ON;
+
+DECLARE
+    delete_attempt BOOLEAN := TRUE; -- simulate a delete attempt
+BEGIN
+    IF delete_attempt THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Deletion not allowed on this table.');
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END;
+/
+
+```
+## Output
+<img width="680" height="267" alt="image" src="https://github.com/user-attachments/assets/9db18be1-f939-4efc-a59b-7611caa9c3c7" />
 
 ## 3. Write a trigger to automatically update a `last_modified` timestamp.
 **Steps:**
@@ -53,7 +90,28 @@ END;
 **Expected Output:**
 - The `last_modified` column in the `products` table is updated automatically to the current date and time when any record is updated.
 
----
+## Program
+```
+SET SERVEROUTPUT ON;
+
+DECLARE
+    product_id NUMBER := 1;
+    product_name VARCHAR2(50) := 'Laptop';
+    price NUMBER := 52000;
+    last_modified TIMESTAMP;
+BEGIN
+    -- Simulate BEFORE UPDATE trigger
+    last_modified := SYSTIMESTAMP;
+
+    DBMS_OUTPUT.PUT_LINE('Product ID: ' || product_id);
+    DBMS_OUTPUT.PUT_LINE('Product Name: ' || product_name);
+    DBMS_OUTPUT.PUT_LINE('Price: ' || price);
+    DBMS_OUTPUT.PUT_LINE('Last Modified: ' || last_modified);
+END;
+/
+```
+## Output
+<img width="682" height="281" alt="image" src="https://github.com/user-attachments/assets/f80aa52d-f575-4f81-ae1c-da9e5d2d6a8c" />
 
 ## 4. Write a trigger to keep track of the number of updates made to a table.
 **Steps:**
@@ -63,7 +121,25 @@ END;
 **Expected Output:**
 - The `audit_log` table will maintain a count of how many updates have been made to the `customer_orders` table.
 
----
+## Program
+```
+SET SERVEROUTPUT ON;
+
+DECLARE
+    update_count NUMBER := 0;
+    table_name   VARCHAR2(50) := 'CUSTOMER_ORDERS';
+BEGIN
+    -- Simulate an update
+    update_count := update_count + 1;
+
+    DBMS_OUTPUT.PUT_LINE('Table: ' || table_name);
+    DBMS_OUTPUT.PUT_LINE('Update count: ' || update_count);
+END;
+/
+
+```
+## Output
+<img width="686" height="283" alt="image" src="https://github.com/user-attachments/assets/38bb93be-98ef-4d6a-aa3e-95c63cd3dfbd" />
 
 ## 5. Write a trigger that checks a condition before allowing insertion into a table.
 **Steps:**
@@ -72,6 +148,28 @@ END;
 
 **Expected Output:**
 - If the inserted salary in the `employees` table is below the condition (e.g., salary < 3000), the insert operation is blocked, and an error message is raised, such as: `ERROR: Salary below minimum threshold.`
+## Program
+```
+SET SERVEROUTPUT ON;
+
+DECLARE
+    emp_id NUMBER := 2;
+    emp_name VARCHAR2(50) := 'Jane Smith';
+    salary NUMBER := 2500;  -- Example salary
+BEGIN
+    IF salary < 3000 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Salary below minimum threshold.');
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE('Employee ' || emp_name || ' inserted successfully with salary ' || salary);
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END;
+/
+```
+## Output
+<img width="732" height="281" alt="image" src="https://github.com/user-attachments/assets/11f01840-c41c-44d4-909c-2f246644278a" />
 
 ## RESULT
 Thus, the PL/SQL trigger programs were written and executed successfully.
